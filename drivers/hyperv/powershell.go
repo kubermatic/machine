@@ -28,8 +28,10 @@ func cmdOut(args ...string) (string, error) {
 	args = append([]string{"-NoProfile", "-NonInteractive"}, args...)
 	cmd := exec.Command(powershell, args...)
 	log.Debugf("[executing ==>] : %v %v", powershell, strings.Join(args, " "))
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
+	var (
+		stdout bytes.Buffer
+		stderr bytes.Buffer
+	)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err := cmd.Run()
@@ -85,7 +87,7 @@ func isAdministrator() (bool, error) {
 }
 
 func isHypervAdministrator() bool {
-	stdout, err := cmdOut(`@([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole("Hyper-V Administrators")`)
+	stdout, err := cmdOut(`@([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole("S-1-5-32-578")`)
 	if err != nil {
 		log.Debug(err)
 		return false
